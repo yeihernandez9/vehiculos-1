@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.vehiculos.demo.entity.Vehiculo;
 import com.vehiculos.demo.repository.VehiculoRepository;
+import com.vehiculos.demo.util.RHilo;
+import com.vehiculos.demo.util.THilo;
+
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
@@ -25,6 +28,10 @@ public class VehiculoService {
 		final long start = System.currentTimeMillis();
 		
 		try {
+			
+			Thread hilo2 = new Thread(new RHilo(2));
+			hilo2.start();
+			logger.info("inico de hilo");
 			repository.save(vehiculo);
 			
 			Map<String, Object> vehiculos = new HashMap<>();
@@ -49,44 +56,47 @@ public class VehiculoService {
 	}
 	
 	public List<Vehiculo> saveVehiculos(List<Vehiculo> vehiculos){
-		final long start = System.currentTimeMillis();
-		logger.info("Elapsed time: {}"+ (System.currentTimeMillis() - start));
+		Thread hilo2 = new Thread(new RHilo(2));
+		try {
+			Thread.sleep(3000);
+			hilo2.start();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return repository.saveAll(vehiculos);
 	}
 	
 	public List<Vehiculo>  getVehiculo(){
-		
 		return repository.findAll();
 	}
 	
 	
 	public Vehiculo getVehiculoId(int id) {
-		
 		return repository.findById(id).orElse(null);
 	}
 	
 	public List<Vehiculo>  getVehiculoByMarca(String marca) {
-		
 		return repository.findByMarca(marca);
 	}
 	
 	public List<Vehiculo>  getVehiculoByTipo(String tipo) {
-		
 		return repository.findByTipo(tipo);
 	}
 	
 	public List<Vehiculo>  getVehiculoByCategoria(int categoria) {
-			
 		return repository.findByCategoria(categoria);
 	}
 	
 	public String deleteVehiculo(int id) {
-		
 		repository.deleteById(id);
 		return "Vehiculo Eliminado con el ID "+id; 
 	}
 	
 	public Vehiculo updateVehiculo(Vehiculo vehiculo) {
+		Thread hilo2 = new Thread(new RHilo(2));
+		hilo2.start();
 		Vehiculo existiVehiculo=repository.findById(vehiculo.getId()).orElse(null);
 		existiVehiculo.setCombustible(vehiculo.getCombustible());
 		existiVehiculo.setMarca(vehiculo.getMarca());

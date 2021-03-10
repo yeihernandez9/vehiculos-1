@@ -41,8 +41,8 @@ public class VehiculoController {
 	
 	@GetMapping("/getVehiculo/{id}")
 	public Vehiculo getVehiculo(@PathVariable int id) {
-		
 		return service.getVehiculoId(id);
+		
 	}
 	
 	@GetMapping("/vehiculoMarca/{marca}")
